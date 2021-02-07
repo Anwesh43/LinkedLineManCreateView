@@ -233,5 +233,14 @@ class LineManCreateView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : LineManCreateView {
+            val view : LineManCreateView = LineManCreateView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
 
