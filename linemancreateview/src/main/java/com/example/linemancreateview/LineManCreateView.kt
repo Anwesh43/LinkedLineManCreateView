@@ -25,8 +25,8 @@ val parts : Int = 3
 val scGap : Float = 0.02f / parts
 val delay : Long = 20
 val rFactor : Float = 12.9f
-val handFactor : Float = 10.8f
-val legFactor : Float = 8.3f
+val handFactor : Float = 5.7f
+val legFactor : Float = 3.3f
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
@@ -51,16 +51,28 @@ fun Canvas.drawLineManCreate(scale : Float, w : Float, h : Float, paint : Paint)
     val sf3: Float = sf.divideScale(2, parts)
 
     drawAt(w / 2, h / 2) {
-        drawLine(0f, -size * sf1, 0f, size * sf1, paint)
+        drawLine(
+            0f,
+            -size,
+            0f,
+            -size + (2 * size - legSize) * sf1,
+            paint
+        )
         drawAt(0f, -size - r) {
             paint.style = Paint.Style.STROKE
-            drawArc(RectF(-r, r, r, r), 0f, 360f * sf2, false, paint)
+            drawArc(RectF(-r, -r, r, r), 0f, 360f * sf2, false, paint)
         }
         drawAt(0f, -size / 2) {
             for (j in 0..1) {
                 save()
                 rotate(45f * (1f - 2 * j) * sf3)
-                drawLine(0f, 0f, 0f, handSize * sf1, paint)
+                drawLine(
+                    0f,
+                    0f,
+                    0f,
+                    handSize * Math.floor(sf1.toDouble()).toFloat(),
+                    paint
+                )
                 restore()
             }
         }
@@ -68,7 +80,12 @@ fun Canvas.drawLineManCreate(scale : Float, w : Float, h : Float, paint : Paint)
             for (j in 0..1) {
                 save()
                 rotate(45f * (1f - 2 * j) * sf3)
-                drawLine(0f, 0f, 0f, legSize * sf1, paint)
+                drawLine(
+                    0f,
+                    0f,
+                    0f,
+                    legSize * sf2,
+                    paint)
                 restore()
             }
         }
@@ -80,6 +97,7 @@ fun Canvas.drawLMCNode(i : Int, scale : Float, paint : Paint) {
     paint.color = colors[i]
     paint.strokeCap = Paint.Cap.ROUND
     paint.strokeWidth = Math.min(w, h) / strokeFactor
+    drawLineManCreate(scale, w, h, paint)
 }
 
 class LineManCreateView(ctx : Context) : View(ctx) {
