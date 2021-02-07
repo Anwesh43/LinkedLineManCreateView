@@ -1,0 +1,3 @@
+include ':linemancreateview'
+include ':app'
+rootProject.name = "LinkedLineManCreateView"
