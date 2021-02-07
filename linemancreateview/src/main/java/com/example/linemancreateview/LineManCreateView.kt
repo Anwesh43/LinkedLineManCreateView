@@ -27,3 +27,8 @@ val delay : Long = 20
 val rFactor : Float = 12.9f
 val handFactor : Float = 10.8f
 val legFactor : Float = 8.3f
+
+fun Int.inverse() : Float = 1f / this
+fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
+fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
+fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
