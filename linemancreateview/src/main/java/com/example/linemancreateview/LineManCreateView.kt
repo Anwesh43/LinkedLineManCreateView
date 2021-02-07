@@ -73,14 +73,13 @@ fun Canvas.drawLineManCreate(scale : Float, w : Float, h : Float, paint : Paint)
             }
         }
     }
-
-    fun Canvas.drawLMCNode(i : Int, scale : Float, paint : Paint) {
-        val w : Float = width.toFloat()
-        val h : Float = height.toFloat()
-        paint.color = colors[i]
-        paint.strokeCap = Paint.Cap.ROUND
-        paint.strokeWidth = Math.min(w, h) / strokeFactor
-    }
+}
+fun Canvas.drawLMCNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    paint.color = colors[i]
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
 }
 
 class LineManCreateView(ctx : Context) : View(ctx) {
@@ -143,6 +142,47 @@ class LineManCreateView(ctx : Context) : View(ctx) {
             if (animated) {
                 animated = false
             }
+        }
+    }
+
+    data class LMCNode(var i : Int, val state : State = State()) {
+
+        private var next : LMCNode? = null
+        private var prev : LMCNode? = null
+
+        init {
+            addNeighbor()
+        }
+
+        fun addNeighbor() {
+            if (i < colors.size - 1) {
+                next = LMCNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawLMCNode(i, state.scale, paint)
+        }
+
+        fun update(cb : (Float) -> Unit) {
+            state.update(cb)
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : LMCNode {
+            var curr : LMCNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
         }
     }
 }
