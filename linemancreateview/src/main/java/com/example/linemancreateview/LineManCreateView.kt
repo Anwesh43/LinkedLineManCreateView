@@ -83,4 +83,19 @@ fun Canvas.drawLineManCreate(scale : Float, w : Float, h : Float, paint : Paint)
     }
 }
 
+class LineManCreateView(ctx : Context) : View(ctx) {
+
+    override fun onDraw(canvas : Canvas) {
+
+    }
+
+    override fun onTouchEvent(event : MotionEvent) : Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+
+            }
+        }
+        return true
+    }
+}
 
